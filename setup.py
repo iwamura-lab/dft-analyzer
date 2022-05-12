@@ -30,7 +30,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "dft-analyzer=scripts.main:main",
+            "dft-analyzer=dft_analyzer.scripts.main:main",
         ]
     },
 )
