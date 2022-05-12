@@ -8,7 +8,10 @@ setup(
     version="1.1.0",
     author="Taiki Iwamura",
     author_email="takki.0206@gmail.com",
-    description="Analyzer for dft calculation to compare with machine learning potential calculation",
+    description=(
+        "Analyzer for dft calculation to compare with "
+        "machine learning potential calculation"
+    ),
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/iwamura-lab/dft-analyzer",
@@ -21,6 +24,13 @@ setup(
     include_package_data=True,
     python_requires=">= 3.7",
     install_requires=[
+        "tqdm",
+        "click",
         "pymatgen",
     ],
+    entry_points={
+        "console_scripts": [
+            "dft-analyzer=scripts.main:main",
+        ]
+    },
 )
