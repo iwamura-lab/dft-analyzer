@@ -12,8 +12,7 @@ from tqdm import tqdm
 @click.group()
 def main():
     """
-    analyzer for DFT calculation to compare with machine learning potential
-    calculation
+    Usefull tools to perform EOS calculation by DFT
     """
     pass
 
