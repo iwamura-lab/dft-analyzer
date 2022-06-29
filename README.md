@@ -1,2 +1,2 @@
-# dft-analyzer
-Analyzer for dft calculation to compare with machine learning potential calculation
+# eos-tools
+Usefull tools to perform EOS calculation by DFT

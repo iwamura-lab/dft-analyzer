@@ -4,17 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="dft_analyzer",
+    name="eos_tools",
     version="1.1.0",
     author="Taiki Iwamura",
     author_email="takki.0206@gmail.com",
-    description=(
-        "Analyzer for dft calculation to compare with "
-        "machine learning potential calculation"
-    ),
+    description=("Usefull tools to perform EOS calculation by DFT"),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/iwamura-lab/dft-analyzer",
+    url="https://github.com/iwamura-lab/eos-tools",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -30,7 +27,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "dft-analyzer=dft_analyzer.scripts.main:main",
+            "eos-tools=eos_tools.scripts.main:main",
         ]
     },
 )
