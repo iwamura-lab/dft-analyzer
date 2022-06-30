@@ -1,0 +1,5 @@
+{
+    "mode": "postprocess",
+    "inputs_dir": "data/inputs/ismear_1/new_potcar/1",
+    "eos_name": "vinet"
+}
