@@ -2,13 +2,14 @@ import json
 import logging
 import re
 from pathlib import Path
+from typing import Tuple
 
 from pymatgen.io.vasp import Vasprun
 
 logger = logging.getLogger(__name__)
 
 
-def parse_volume_and_energy(dir_path: Path):
+def parse_volume_and_energy(dir_path: Path) -> Tuple[float, float]:
     logger.info(f" Analysing {dir_path.stem}")
 
     lattice_constant_pattern = re.compile(r"\d+")

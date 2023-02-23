@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 
 import click
+import numpy as np
 from pymatgen.analysis.eos import EOS
 from tqdm import tqdm
 
@@ -32,17 +33,20 @@ def main(config_file):
         input_dir_path_list = [
             dir_path for dir_path in Path(config.inputs_dir).glob("**/*[0-9][0-9][0-9]")
         ]
-        volumes, energies = zip(
-            *[
+        ev_data = np.array(
+            [
                 parse_volume_and_energy(input_dir_path)
                 for input_dir_path in tqdm(input_dir_path_list)
             ]
         )
+        dump_dir_path = Path(config_file).parent
+        ev_data_path = dump_dir_path / "ev_data.txt"
+        np.savetxt(ev_data_path, ev_data, header="volume(ang^3), energy(eV)")
 
         logging.info(" Start EOS fitting")
         logging.info(f"     EOS name  : {config.eos_name}")
 
-        eos = EOS(eos_name=config.eos_name).fit(volumes, energies)
+        eos = EOS(eos_name=config.eos_name).fit(ev_data[:, 0], ev_data[:, 1])
         calc_info_dict["e0"] = eos.e0
         calc_info_dict["v0"] = eos.v0
         calc_info_dict["a0"] = eos.v0 ** (1 / 3)
@@ -50,7 +54,6 @@ def main(config_file):
 
         logging.info(" Dumping eos_analysis.json")
 
-        dump_dir_path = Path(config_file).parent
         eos_analysis_json_path = dump_dir_path / "eos_analysis.json"
         with eos_analysis_json_path.open("w") as f:
             json.dump(calc_info_dict, f, indent=4)
