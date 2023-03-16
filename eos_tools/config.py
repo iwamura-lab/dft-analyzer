@@ -10,6 +10,7 @@ class Config:
     mode: str
     inputs_dir: str
     eos_name: str
+    atomic_energy: float = -3.37689
 
 
 def load_config(path: str) -> Config:
