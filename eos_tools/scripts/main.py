@@ -5,6 +5,7 @@ from pathlib import Path
 import click
 import numpy as np
 from pymatgen.analysis.eos import EOS
+from pymatgen.io.vasp import Poscar
 from tqdm import tqdm
 
 from eos_tools.config import load_config
@@ -39,6 +40,11 @@ def main(config_file):
                 for input_dir_path in tqdm(input_dir_path_list)
             ]
         )
+
+        struct = Poscar.from_file(str(input_dir_path_list[0] / "POSCAR")).structure
+        n_atom = struct.frac_coords.shape[0]
+        ev_data[:, 1] -= n_atom * config.atomic_energy
+
         dump_dir_path = Path(config_file).parent
         ev_data_path = dump_dir_path / "ev_data.txt"
         np.savetxt(ev_data_path, ev_data, header="volume(ang^3), energy(eV)")
