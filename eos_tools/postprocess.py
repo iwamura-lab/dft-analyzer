@@ -10,8 +10,17 @@ logger = logging.getLogger(__name__)
 
 
 def parse_volume_and_energy(dir_path: Path) -> Tuple[float, float]:
+    """Parse volume and total energy from a given directory
+
+    Args:
+        dir_path (Path): Path object of calculation directory
+
+    Returns:
+        Tuple[float, float]: volume and total energy
+    """
     logger.info(f" Analysing {dir_path.stem}")
 
+    # Extract lattice constant from directory name
     lattice_constant_pattern = re.compile(r"\d+")
     m = lattice_constant_pattern.search(dir_path.stem)
     lattice_constant = float(m.group(0)) / 100
@@ -20,6 +29,7 @@ def parse_volume_and_energy(dir_path: Path) -> Tuple[float, float]:
     logger.info(f"      lattice constant (ang): {lattice_constant}")
     logger.info(f"      volume (ang^3)        : {volume}")
 
+    # Extract total energy from vasprun_xml.json
     vasprun_xml_json_path = dir_path / "vasprun_xml.json"
     if vasprun_xml_json_path.exists():
         with vasprun_xml_json_path.open("r") as f:

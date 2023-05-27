@@ -41,6 +41,7 @@ def main(config_file):
             ]
         )
 
+        # Calculate cohesive energy using n_atom obtained from some structure
         struct = Poscar.from_file(str(input_dir_path_list[0] / "POSCAR")).structure
         n_atom = struct.frac_coords.shape[0]
         ev_data[:, 1] -= n_atom * config.atomic_energy
