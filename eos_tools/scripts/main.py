@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from eos_tools.config import load_config
 from eos_tools.postprocess import parse_volume_and_energy
+from eos_tools.preprocess import generate_deformed_structures
 
 
 @click.command()
@@ -21,7 +22,7 @@ def main(config_file):
     config = load_config(config_file)
 
     if config.mode == "preprocess":
-        pass
+        generate_deformed_structures()
 
     if config.mode == "postprocess":
         logging.info(" Start EOS postprocessing")
