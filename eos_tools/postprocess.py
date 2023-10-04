@@ -1,6 +1,5 @@
 import json
 import logging
-import re
 from pathlib import Path
 from typing import Tuple
 
@@ -20,10 +19,11 @@ def parse_volume_and_energy(calc_dir_path: Path) -> Tuple[float, float]:
     """
     logger.info(f" Analysing {calc_dir_path.name}")
 
-    # Extract lattice constant from directory name
-    lattice_constant_pattern = re.compile(r"\d+")
-    m = lattice_constant_pattern.search(calc_dir_path.name)
-    lattice_constant = float(m.group(0)) / 100
+    # Extract volume from POSCAR.init
+    poscar_path = calc_dir_path / "POSCAR.init"
+    with poscar_path.open("r") as f:
+        poscar_lines = [line.strip() for line in f]
+    lattice_constant = float(poscar_lines[1])
     volume = lattice_constant**3
 
     logger.info(f"      lattice constant (ang): {lattice_constant}")
