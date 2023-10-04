@@ -26,29 +26,32 @@ def main(config_file):
 
     if config.mode == "postprocess":
         logging.info(" Start EOS postprocessing")
-        logging.info(f"     inputs dir: {config.inputs_dir}")
+        logging.info(f"     calculation directory: {config.calc_root_dir}")
 
         calc_info_dict = {}
-        calc_info_dict["inputs_dir"] = config.inputs_dir
+        calc_info_dict["calc_root_dir"] = config.calc_root_dir
         calc_info_dict["eos_name"] = config.eos_name
 
-        input_dir_path_list = [
-            dir_path for dir_path in Path(config.inputs_dir).glob("**/*[0-9][0-9][0-9]")
+        calc_dir_path_list = [
+            path.parent
+            for path in Path(config.calc_root_dir).glob("deformed_*/vasprun.xml")
         ]
         ev_data = np.array(
             [
-                parse_volume_and_energy(input_dir_path)
-                for input_dir_path in tqdm(input_dir_path_list)
+                parse_volume_and_energy(calc_dir_path)
+                for calc_dir_path in tqdm(calc_dir_path_list)
             ]
         )
 
         # Calculate cohesive energy using n_atom obtained from some structure
-        struct = Poscar.from_file(str(input_dir_path_list[0] / "POSCAR")).structure
+        struct = Poscar.from_file(
+            str(calc_dir_path_list[0] / "POSCAR"), check_for_POTCAR=False
+        ).structure
         n_atom = struct.frac_coords.shape[0]
         ev_data[:, 1] -= n_atom * config.atomic_energy
 
-        dump_dir_path = Path(config_file).parent
-        ev_data_path = dump_dir_path / "ev_data.txt"
+        outputs_dir_path = Path(config_file).parent
+        ev_data_path = outputs_dir_path / "ev_data.txt"
         np.savetxt(ev_data_path, ev_data, header="volume(ang^3), energy(eV)")
 
         logging.info(" Start EOS fitting")
@@ -62,11 +65,11 @@ def main(config_file):
 
         logging.info(" Dumping eos_analysis.json")
 
-        eos_analysis_json_path = dump_dir_path / "eos_analysis.json"
+        eos_analysis_json_path = outputs_dir_path / "eos_analysis.json"
         with eos_analysis_json_path.open("w") as f:
             json.dump(calc_info_dict, f, indent=4)
 
         logging.info(" Dumping eos.png")
 
         plt = eos.plot()
-        plt.savefig(dump_dir_path / "eos.png")
+        plt.savefig(outputs_dir_path / "eos.png")

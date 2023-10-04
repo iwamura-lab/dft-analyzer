@@ -8,7 +8,7 @@ from dataclasses_json import dataclass_json
 @dataclass
 class Config:
     mode: str
-    inputs_dir: str = "data/inputs"
+    calc_root_dir: str = "."
     eos_name: str = "vinet"
     atomic_energy: float = -3.37689
 
