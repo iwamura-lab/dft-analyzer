@@ -33,8 +33,8 @@ def main(config_file):
         calc_info_dict["eos_name"] = config.eos_name
 
         calc_dir_path_list = [
-            dir_path
-            for dir_path in Path(config.calc_root_dir).glob("**/*[0-9][0-9][0-9]")
+            path.parent
+            for path in Path(config.calc_root_dir).glob("deformed_*/vasprun.xml")
         ]
         ev_data = np.array(
             [
@@ -44,7 +44,9 @@ def main(config_file):
         )
 
         # Calculate cohesive energy using n_atom obtained from some structure
-        struct = Poscar.from_file(str(calc_dir_path_list[0] / "POSCAR")).structure
+        struct = Poscar.from_file(
+            str(calc_dir_path_list[0] / "POSCAR"), check_for_POTCAR=False
+        ).structure
         n_atom = struct.frac_coords.shape[0]
         ev_data[:, 1] -= n_atom * config.atomic_energy
 
