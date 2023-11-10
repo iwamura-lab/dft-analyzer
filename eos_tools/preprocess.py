@@ -4,8 +4,13 @@ import numpy as np
 from pymatgen.io.vasp import Poscar
 
 
-def generate_deformed_structures() -> None:
-    """Generate structures with different volume from relaxed structure"""
+def generate_deformed_structures(max_volume_strain: float, n_structure: int) -> None:
+    """Generate structures with different volume from relaxed structure
+
+    Args:
+        max_volume_strain (float): The maximum of volume strain.
+        n_structure (int): The number of deformed structures.
+    """
     # Load POSCAR
     relaxed_poscar_path = Path("relax") / "POSCAR"
     relaxed_structure = Poscar.from_file(str(relaxed_poscar_path)).structure
@@ -19,10 +24,9 @@ def generate_deformed_structures() -> None:
         relaxed_structure.volume / perfect_structure.volume
     ) ** (1 / 3)
 
-    max_volume_strain = 0.08
-    line_strain_list = np.linspace(1 - max_volume_strain, 1 + max_volume_strain, 9) ** (
-        1 / 3
-    )
+    line_strain_list = np.linspace(
+        1 - max_volume_strain, 1 + max_volume_strain, n_structure
+    ) ** (1 / 3)
 
     for i, strain in enumerate(line_strain_list, 1):
         poscar_lines[1] = str(eq_lattice_constant * strain)

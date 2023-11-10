@@ -22,7 +22,7 @@ def main(config_file):
     config = load_config(config_file)
 
     if config.mode == "preprocess":
-        generate_deformed_structures()
+        generate_deformed_structures(config.max_volume_strain, config.n_structure)
 
     if config.mode == "postprocess":
         logging.info(" Start EOS postprocessing")
