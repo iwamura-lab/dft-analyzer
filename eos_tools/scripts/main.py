@@ -32,10 +32,10 @@ def main(config_file):
         calc_info_dict["calc_root_dir"] = config.calc_root_dir
         calc_info_dict["eos_name"] = config.eos_name
 
-        calc_dir_path_list = [
+        calc_dir_path_list = sorted(
             path.parent
             for path in Path(config.calc_root_dir).glob("deformed_*/vasprun.xml")
-        ]
+        )
         ev_data = np.array(
             [
                 parse_volume_and_energy(calc_dir_path)
