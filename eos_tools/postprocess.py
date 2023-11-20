@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Tuple
 
-from pymatgen.io.vasp import Vasprun
+from pymatgen.io.vasp import Poscar, Vasprun
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +20,9 @@ def parse_volume_and_energy(calc_dir_path: Path) -> Tuple[float, float]:
 
     # Extract volume from POSCAR.init
     poscar_path = calc_dir_path / "POSCAR.init"
-    with poscar_path.open("r") as f:
-        poscar_lines = [line.strip() for line in f]
-    lattice_constant = float(poscar_lines[1])
-    volume = lattice_constant**3
+    poscar = Poscar.from_file(str(poscar_path), check_for_POTCAR=False)
+    volume = poscar.structure.volume
 
-    logger.info(f"      lattice constant (ang): {lattice_constant}")
     logger.info(f"      volume (ang^3)        : {volume}")
 
     # Extract total energy from vasprun.xml
